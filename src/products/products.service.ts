@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 // import { Model } from 'mongoose';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -8,11 +8,13 @@ import { Model } from 'mongoosastic';
 
 @Injectable()
 export class ProductsService {
+  private logger = new Logger('ProductsService');
   constructor(
     @InjectModel(Product.name) private productModel: Model<ProductDocument>,
   ) {}
 
   async search(text: string): Promise<string[]> {
+    this.logger.log('>>>>>>TEXT', text);
     return new Promise((resolve, reject) => {
       this.productModel.esSearch(
         {
