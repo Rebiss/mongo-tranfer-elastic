@@ -1,9 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-// import { Model } from 'mongoose';
-import { CreateProductDto } from './dto/create-product.dto';
-import { Product, ProductDocument } from './schemas/product.schema';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { CreateProductDto, UpdateProductDto } from './dto/';
+import { Product, ProductDocument } from './schemas/';
 import { Model } from 'mongoosastic';
 
 @Injectable()
@@ -13,8 +11,8 @@ export class ProductsService {
     @InjectModel(Product.name) private productModel: Model<ProductDocument>,
   ) {}
 
-  async search(text: string): Promise<string[]> {
-    this.logger.log('>>>>>>TEXT', text);
+  public async search(text: string): Promise<string[]> {
+    this.logger.log('>>>>>>>>>>>>>', text);
     return new Promise((resolve, reject) => {
       this.productModel.esSearch(
         {
@@ -31,10 +29,11 @@ export class ProductsService {
             },
           },
         },
-        function (err, titles) {
+        function (err: Error, titles) {
           if (err) {
             return reject(err);
           }
+          this.logger.log('>>>>>>TEXT', titles);
 
           return resolve(titles.hits.hits.map((item) => item._source.title));
         },
@@ -42,24 +41,27 @@ export class ProductsService {
     });
   }
 
-  async getAll(): Promise<Product[]> {
+  public async getAll(): Promise<Product[]> {
     return this.productModel.find().exec();
   }
 
-  async getById(id: string): Promise<Product> {
+  public async getById(id: string): Promise<Product> {
     return this.productModel.findById(id);
   }
 
-  async create(productDto: CreateProductDto): Promise<Product> {
+  public async create(productDto: CreateProductDto): Promise<Product> {
     const newProduct = new this.productModel(productDto);
     return newProduct.save();
   }
 
-  async remove(id: string): Promise<Product> {
+  public async remove(id: string): Promise<Product> {
     return this.productModel.findByIdAndRemove(id);
   }
 
-  async update(id: string, productDto: UpdateProductDto): Promise<Product> {
+  public async update(
+    id: string,
+    productDto: UpdateProductDto,
+  ): Promise<Product> {
     return this.productModel.findByIdAndUpdate(id, productDto, { new: true });
   }
 }

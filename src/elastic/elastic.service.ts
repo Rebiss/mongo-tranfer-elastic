@@ -1,29 +1,26 @@
 import { Injectable, HttpException, Logger } from '@nestjs/common';
 import * as elasticsearch from 'elasticsearch';
-
-const url = 'loacalhost:9200';
+import { ELASTIC } from '../constant/';
+import { ElasticsearchService } from '@nestjs/elasticsearch';
 
 @Injectable()
 export class ElasticService {
-    private logger = new Logger('ElasticService')
-  private readonly esclient: elasticsearch.Client;
+  private logger = new Logger('ElasticService');
+  private readonly esClient: elasticsearch.Client;
 
   constructor() {
-    this.esclient = new elasticsearch.Client({
-      host: url,
-    });
-    this.esclient.ping({ requestTimeout: 3000 }).catch((error) => {
-      throw new HttpException(
-        {
-          status: 'Error',
-          message: 'ElasticSearch Cluster unable',
-        },
-        500,
-      );
+    this.esClient = new elasticsearch.Client({
+      host: ELASTIC.LOCAL_HOST,
     });
   }
-  async searchIndex(q: string) {
-      this.logger.log(q)
+
+  public async searchIndex(q: string) {
+    const checkIndex = await this.esClient.indices.exists({
+      index: ELASTIC.INDEX,
+    });
+
+    console.log('CHACK', checkIndex);
+
     const body = {
       size: 200,
       from: 0,
@@ -33,10 +30,14 @@ export class ElasticService {
         },
       },
     };
-    return await this.esclient
-      .search({ index: 'title', body, q })
-      .then((res) => res.hits.hits)
-      .catch((err) => {
+
+    return await this.esClient
+      .search({ index: ELASTIC.INDEX, body, q })
+      // .then((res) => this.logger.log(res.hits))
+      .then((res) => {
+        return res.hits.hits.map((hit) => this.logger.log(hit._source));
+      })
+      .catch((err: Error) => {
         throw new HttpException(err, 500);
       });
   }
