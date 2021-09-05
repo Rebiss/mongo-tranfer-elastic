@@ -4,7 +4,7 @@ import { ProductsService } from './products.service';
 import { ProductsController } from './products.controller';
 import { Product, ProductSchema } from './schemas/product.schema';
 import * as mongoosastic from 'mongoosastic';
-
+import { ELASTIC } from './../constant/';
 @Module({
   providers: [ProductsService],
   controllers: [ProductsController],
@@ -13,7 +13,7 @@ import * as mongoosastic from 'mongoosastic';
       {
         name: Product.name,
         schema: ProductSchema.plugin(mongoosastic, {
-          hosts: ['localhost:9200'],
+          hosts: [ELASTIC.LOCAL_HOST],
         }),
       },
     ]),

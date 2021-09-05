@@ -8,10 +8,18 @@ export class Product {
   @Prop({
     es_indexed: true,
   })
-  title: string;
+  name: string;
 
   @Prop()
   price: number;
+
+  @Prop()
+  isComplet: boolean;
+
+  @Prop({
+    es_indexed: true,
+  })
+  llc: string;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

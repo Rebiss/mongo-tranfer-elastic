@@ -24,7 +24,7 @@ export class ProductsController {
 
   @Get('/search')
   search(@Query('q') q: string): Promise<any> {
-    this.logger.log('>>>Q', q);
+    this.logger.log(q);
     return this.productsService.search(q);
   }
 

@@ -36,7 +36,7 @@ $ npm run start:prod
 ## Query Postman
 
 ```bash
-$ localhost:3000/products
+$ localhost:3022/products
 $ localhost:9200/products/_search
 $ body
   {
@@ -51,11 +51,13 @@ $ body
     }
   }
 }
-$ http://localhost:3000/products/search?q=ik
+$ http://localhost:3022/elastic/search?q=55
 $ body 
-  {
-      "title": "Yulusik",
-      "price": 120320
-  }
+{
+    "title": "Serobik___13",
+    "price": 12,
+    "isComplet": true,
+    "llc": "GELENJIK COMPANY LLC "
+}
 
 ```
