@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateProductDto, UpdateProductDto } from './dto/';
-import { Product, ProductDocument } from './schemas/';
+import { Product, ProductDocument } from '../other/schemas';
 import { Model } from 'mongoosastic';
 
 @Injectable()

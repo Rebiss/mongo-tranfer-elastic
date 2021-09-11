@@ -12,10 +12,9 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { CreateProductDto, UpdateProductDto } from './dto/';
 import { ProductsService } from './products.service';
-import { Product } from './schemas/product.schema';
+import { Product } from '../other/schemas/product.schema';
 
 @Controller('products')
 export class ProductsController {
@@ -23,9 +22,10 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get('/search')
-  search(@Query('q') q: string): Promise<any> {
-    this.logger.log(q);
-    return this.productsService.search(q);
+  search(@Query('query') query: string): Promise<any> {
+    this.logger.log(query);
+
+    return this.productsService.search(query);
   }
 
   //

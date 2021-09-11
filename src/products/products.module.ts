@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import * as mongoosastic from 'mongoosastic';
 import { ProductsService } from './products.service';
 import { ProductsController } from './products.controller';
-import { Product, ProductSchema } from './schemas/product.schema';
+import { Product, ProductSchema } from '../other/schemas/product.schema';
 import * as elasticsearch from 'elasticsearch';
-import { ELASTIC } from './../constant/';
+import * as mongoosastic from 'mongoosastic';
+import { ELASTIC } from '../other/constant';
 
 const esClient = new elasticsearch.Client({ host: ELASTIC.HOSTS });
 
