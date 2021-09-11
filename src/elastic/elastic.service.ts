@@ -1,7 +1,6 @@
 import { Injectable, HttpException, Logger } from '@nestjs/common';
 import * as elasticsearch from 'elasticsearch';
 import { ELASTIC } from '../constant/';
-import { ElasticsearchService } from '@nestjs/elasticsearch';
 
 @Injectable()
 export class ElasticService {
@@ -10,16 +9,16 @@ export class ElasticService {
 
   constructor() {
     this.esClient = new elasticsearch.Client({
-      host: ELASTIC.LOCAL_HOST,
+      host: ELASTIC.HOSTS,
     });
   }
 
   public async searchIndex(q: string) {
-    const checkIndex = await this.esClient.indices.exists({
-      index: ELASTIC.INDEX,
-    });
+    // const checkIndex = await this.esClient.indices.exists({
+    //   index: ELASTIC.INDEX,
+    // });
 
-    console.log('CHACK', checkIndex);
+    console.log('CHACK>>>>>>', q);
 
     const body = {
       size: 200,
@@ -30,15 +29,20 @@ export class ElasticService {
         },
       },
     };
-
-    return await this.esClient
+    const response = [];
+    await this.esClient
       .search({ index: ELASTIC.INDEX, body, q })
-      // .then((res) => this.logger.log(res.hits))
       .then((res) => {
-        return res.hits.hits.map((hit) => this.logger.log(hit._source));
+        return res.hits.hits.map((hit) => {
+          const data = Object.values(hit._source);
+          response.push(Object.values(hit._source));
+          console.log(data);
+        });
       })
       .catch((err: Error) => {
         throw new HttpException(err, 500);
       });
+
+    return response.flat();
   }
 }

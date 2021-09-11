@@ -35,29 +35,18 @@ $ npm run start:prod
 
 ## Query Postman
 
+#### POST Request(Create Product, Create Index)
 ```bash
-$ localhost:3022/products
-$ localhost:9200/products/_search
-$ body
-  {
-  "query": {
-    "regexp": {
-      "title": {
-        "value": ".*ik.*",
-        "flags": "ALL",
-        "case_insensitive": true,
-        "max_determinized_states": 10000
-      }
-    }
-  }
-}
-$ http://localhost:3022/elastic/search?q=55
-$ body 
+curl -X POST localhost:3022/products
 {
-    "title": "Serobik___13",
-    "price": 12,
+    "name": "Bella",
+    "price": 22,
     "isComplet": true,
-    "llc": "GELENJIK COMPANY LLC "
+    "llc": "LLC  46655"
 }
+```
+#### Check Index
+```bash
+curl -X GET http://192.168.171.141:9200/_aliases?pretty=true
 
 ```
