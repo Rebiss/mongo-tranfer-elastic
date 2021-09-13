@@ -40,14 +40,14 @@ $ npm run start
 http://localhost:3022/api/v1/products
 # Request Body
 {
-    "name": "Bella",      # Indexed
+    "name": "PC",      # Indexed
     "price": 22,
     "isComplet": true,
     "llc": "LLC  46655"   # Indexed
 }
 # Request N-2
 {
-    "name": "Calipso",    # Indexed 
+    "name": "Camputer",    # Indexed 
     "price": 11,
     "isComplet": false,
     "llc": "Turist LLC"   # Indexed
@@ -65,17 +65,17 @@ curl -X GET http://192.168.171.141:9200/_aliases?pretty=true
 
 ```sh
 # Postman One Query
-  http://localhost:3022//api/v1/elastic/products?q=Calipso
+  http://localhost:3022//api/v1/elastic/products?q=Camputer
 # Return resalt
 [
     "Turist LLC",
-    "Calipso"
+    "Camputer"
 ]
 
 # Postman Split Query
-http://localhost:3022/api/v1/elastic/search?q=Selena/name
+http://localhost:3022/api/v1/elastic/search?q=PC/name
 #Return result
 [
-    "Calipso"
+    "PC"
 ]
 ```

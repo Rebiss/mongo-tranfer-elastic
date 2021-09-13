@@ -21,14 +21,6 @@ export class ProductsController {
   private logger = new Logger('ProductsController');
   constructor(private readonly productsService: ProductsService) {}
 
-  @Get('/search')
-  search(@Query('query') query: string): Promise<any> {
-    this.logger.log(query);
-
-    return this.productsService.search(query);
-  }
-
-  //
   @Get()
   getAll(): Promise<Product[]> {
     return this.productsService.getAll();
@@ -43,6 +35,7 @@ export class ProductsController {
   @HttpCode(HttpStatus.CREATED)
   @Header('Cache-Control', 'none')
   create(@Body() createProductDto: CreateProductDto): Promise<Product> {
+    this.logger.log(createProductDto);
     return this.productsService.create(createProductDto);
   }
 
