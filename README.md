@@ -19,34 +19,63 @@
     <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
   <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
 </p>
-## Installation
 
-```bash
+## Installation and Running
+
+```sh
 $ npm install
+$ npm run start
 ```
 
-## Running the app
+## Run docker-compose  
+```sh
+  docker-compose up -d
 
-```bash
-$ npm run start
-$ npm run start
-$ npm run start:prod
 ```
 
-## Query Postman
-
-#### POST Request(Create Product, Create Index)
+#### POST Request(Create Product in MongoDB and Create Index in Elastic)
 ```bash
-curl -X POST localhost:3022/products
+
+# Postman
+http://localhost:3022/api/v1/products
+# Request Body
 {
-    "name": "Bella",
+    "name": "Bella",      # Indexed
     "price": 22,
     "isComplet": true,
-    "llc": "LLC  46655"
+    "llc": "LLC  46655"   # Indexed
+}
+# Request N-2
+{
+    "name": "Calipso",    # Indexed 
+    "price": 11,
+    "isComplet": false,
+    "llc": "Turist LLC"   # Indexed
 }
 ```
 #### Check Index
 ```bash
+# Console
 curl -X GET http://192.168.171.141:9200/_aliases?pretty=true
 
+```
+
+
+#### GET Request(Search result)
+
+```sh
+# Postman One Query
+  http://localhost:3022//api/v1/elastic/products?q=Calipso
+# Return resalt
+[
+    "Turist LLC",
+    "Calipso"
+]
+
+# Postman Split Query
+http://localhost:3022/api/v1/elastic/search?q=Selena/name
+#Return result
+[
+    "Calipso"
+]
 ```

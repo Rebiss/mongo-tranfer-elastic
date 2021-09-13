@@ -1,75 +1,40 @@
-version: '3.2'
+version: '3.1'
 
 services:
+    mongodb:
+        image: mongo
+        container_name: mongodb
+        restart: always
+        environment:
+            MONGO_USERNAME: root
+            MONGO_PASSWORD: root
+            MONGO_URL: mongodb://localhost:27017/products
+        volumes:
+            - ./docker/mongo/mongod.conf:/etc/mongod.conf
+            - ./docker/mongo/initdb.d/:/docker-entrypoint-initdb.d/
+            - ./docker/mongo/data/db/:/data/db/
+            - ./docker/mongo/data/log/:/var/log/mongodb/
+        ports:
+            - "27017:27017"
+        command: ["-f", "/etc/mongod.conf"]
+
     elasticsearch:
-        build:
-            context: elasticsearch/
-            args:
-                ELK_VERSION: $ELK_VERSION
-    volumes:
-        - type: bind
-            source: ./elasticsearch/config/elasticsearch.yml
-            target: /usr/share/elasticsearch/config/elasticsearch.yml
-            read_only: true
-        - type: volume
-            source: elasticsearch
-            target: /usr/share/elasticsearch/data
-    ports:
-        - "9200:9200"
-        - "9300:9300"
-    environment:
-        ES_JAVA_OPTS: "-Xmx256m -Xms256m"
-        ELASTIC_PASSWORD: changeme
-        discovery.type: single-node
-    networks:
-        - elk
-
-    logstash:
-        build:
-            context: logstash/
-            args:
-                ELK_VERSION: $ELK_VERSION
-    volumes:
-        - type: bind
-            source: ./logstash/config/logstash.yml
-            target: /usr/share/logstash/config/logstash.yml
-            read_only: true
-        - type: bind
-            source: ./logstash/pipeline
-            target: /usr/share/logstash/pipeline
-            read_only: true
-    ports:
-        - "5044:5044"
-        - "5000:5000/tcp"
-        - "5000:5000/udp"
-        - "9600:9600"
-    environment:
-        LS_JAVA_OPTS: "-Xmx256m -Xms256m"
-    networks:
-        - elk
-    depends_on:
-        - elasticsearch
-
-    kibana:
-        build:
-        context: kibana/
-        args:
-            ELK_VERSION: $ELK_VERSION
-    volumes:
-        - type: bind
-            source: ./kibana/config/kibana.yml
-            target: /usr/share/kibana/config/kibana.yml
-            read_only: true
-    ports:
-        - "5601:5601"
-    networks:
-        - elk
-    depends_on:
-        - elasticsearch
-
-networks:
-    elk:
-        driver: bridge
-
-volumes:
-    elasticsearch:
+        image: elasticsearch:7.14.0
+        container_name: elasticsearch
+        environment:
+        - xpack.security.enabled=false
+        - discovery.type=single-node
+        ulimits:
+        memlock:
+            soft: -1
+            hard: -1
+        nofile:
+            soft: 65536
+            hard: 65536
+        cap_add:
+        - IPC_LOCK
+        volumes:
+        - ./docker/elasticsearch/data:/usr/share/elasticsearch/data
+        ports:
+        - 9200:9200
+        - 9300:9300

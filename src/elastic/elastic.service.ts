@@ -1,11 +1,12 @@
-import { Injectable, HttpException, Logger } from '@nestjs/common';
+import { Injectable, HttpException, Logger, Query } from '@nestjs/common';
 import * as elasticsearch from 'elasticsearch';
-import { ELASTIC } from '../constant/';
+import { ELASTIC } from '../other/constant';
+import { getSplitQuery } from './helper/body';
 
 @Injectable()
 export class ElasticService {
   private logger = new Logger('ElasticService');
-  private readonly esClient: elasticsearch.Client;
+  private esClient: elasticsearch.Client;
 
   constructor() {
     this.esClient = new elasticsearch.Client({
@@ -13,30 +14,26 @@ export class ElasticService {
     });
   }
 
-  public async searchIndex(q: string) {
-    // const checkIndex = await this.esClient.indices.exists({
-    //   index: ELASTIC.INDEX,
-    // });
+  public async connectionES() {
+    const checkIndex = await this.esClient.indices.exists({
+      index: ELASTIC.INDEX,
+    });
+    const isConnection = await this.esClient.cluster.health();
+  }
 
-    console.log('CHACK>>>>>>', q);
+  public async searchIndex(
+    q: string,
+    field: string,
+    response = [],
+    body = getSplitQuery(q, field),
+  ) {
+    if (!q.length) throw new Error('Query parametr is empty');
 
-    const body = {
-      size: 200,
-      from: 0,
-      query: {
-        match: {
-          url: q,
-        },
-      },
-    };
-    const response = [];
     await this.esClient
       .search({ index: ELASTIC.INDEX, body, q })
       .then((res) => {
         return res.hits.hits.map((hit) => {
-          const data = Object.values(hit._source);
           response.push(Object.values(hit._source));
-          console.log(data);
         });
       })
       .catch((err: Error) => {
