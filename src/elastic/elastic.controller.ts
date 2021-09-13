@@ -15,7 +15,7 @@ export class ElasticController {
 
       return await this.elasticService.searchIndex(_query, _field);
     } catch (err) {
-      console.log(err);
+      this.logger.log(err);
     }
   }
 }
