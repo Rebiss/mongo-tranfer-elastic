@@ -63,7 +63,7 @@ http://localhost:3022/api/v1/products
 }
 ##
 # Postman POST Request.
-http://localhost:3022/api/v1/elastic/search?query=PC/name/
+http://localhost:3022/api/v1/elastic/search?query=PC/name/33
 ##
 ##
 ```
@@ -73,7 +73,7 @@ http://localhost:3022/api/v1/elastic/search?query=PC/name/
 ########################################################################################################
 #         |    Search Data      |               Elastic indexes                    | Pagination
 #         |                     |                                                  |
-# ?query= |    JavaScript       |/  title   /   tags    /  authors  /  description |/ 12 
+# ?query= |    JavaScript       |    /  name   /   llc    /  ...  /  ...           |/ 22
 #         |                     |                                                  |
 #         | Should be the first |            Search fields                         | Should be the last
 ########################################################################################################
@@ -81,7 +81,7 @@ http://localhost:3022/api/v1/elastic/search?query=PC/name/
 ##
 $ http://localhost:3022/api/v1/elastic/search?query={ SEARCH_STRING }
 ##
-$ http://localhost:3022/api/v1/elastic/search?query={ SEARCH_STRING_1 SEARCH_STRING_2 }/{  SEARCH_FIELDS_1, ...}/{ 24 }
+$ http://localhost:3022/api/v1/elastic/search?query={ SEARCH_STRING_1 SEARCH_STRING_2 }/{  SEARCH_FIELDS_1, ...}/{ 22 }
 ##
 # Example.
 $ http://localhost:3022/api/v1/elastic/search?query=JavaScript/title/tags/authors/12
