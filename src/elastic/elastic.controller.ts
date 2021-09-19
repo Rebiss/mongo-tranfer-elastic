@@ -7,13 +7,16 @@ export class ElasticController {
   constructor(private readonly elasticService: ElasticService) {}
 
   @Get('/search')
-  async searchData(@Query('q') q: string): Promise<any> {
+  async searchData(@Query('q') q: string) {
     try {
-      const query = q.split('/'),
-        _field = query[1],
-        _query = query[0];
+      /**
+       * @q Needed validate.
+       */
+      const field = q.split('/'),
+        query = field.shift(),
+        size = field.pop();
 
-      return await this.elasticService.searchIndex(_query, _field);
+      return await this.elasticService.searchIndex(query, field, size);
     } catch (err) {
       this.logger.log(err);
     }

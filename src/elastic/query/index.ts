@@ -1,7 +1,7 @@
-export const _MatchQuery = (query: string, field: string) => {
+export const _MatchQuery = (query: string, size?: number) => {
   return {
     from: 0,
-    size: 20,
+    size: size,
     query: {
       match: {
         url: query,
@@ -10,12 +10,12 @@ export const _MatchQuery = (query: string, field: string) => {
   };
 };
 
-export const _PrefixQuery = (query: string, field?: string) => {
+export const _PrefixQuery = (query, field?, size?) => {
   return {
     from: 0,
-    size: 22,
+    size: parseInt(size),
     _source: {
-      includes: [field],
+      includes: field,
     },
     query: {
       prefix: {
@@ -25,12 +25,16 @@ export const _PrefixQuery = (query: string, field?: string) => {
   };
 };
 
-export const _WildcardQuery = (query: string, field: string) => {
+export const _WildcardQuery = (
+  query: string,
+  field?: string[],
+  size?: number,
+) => {
   return {
-    size: 22,
+    size: size,
     from: 0,
     _source: {
-      includes: [field],
+      includes: field,
     },
     query: {
       wildcard: {
@@ -39,14 +43,18 @@ export const _WildcardQuery = (query: string, field: string) => {
     },
   };
 };
-export const _MultiMatchQuery = (query: string, field: string) => {
+export const _MultiMatchQuery = (
+  query: string,
+  field?: string[],
+  size?: number,
+) => {
   return {
-    size: 11,
+    size: size,
     from: 0,
     query: {
       multi_match: {
         query: query,
-        fields: [field, 'phrase'],
+        fields: field,
       },
     },
   };

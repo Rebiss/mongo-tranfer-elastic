@@ -25,57 +25,65 @@
 ```sh
 $ npm install
 $ npm run start
+##
+# Run docker-compose
+$docker-compose up -d
+##
 ```
 
-## Run docker-compose  
+## ElasticSearch Query
+
 ```sh
-  docker-compose up -d
-
+##
+# Check Index.
+##
+$curl -X GET http://192.168.171.141:9200/_aliases?pretty=true
+##
+# Get Data.
+$curl -X GET http://localhost:9200/_search
+##
+# Delet all Indexes.
+$curl -X DELETE 'localhost:9200/_all'
+##
+##
 ```
 
-#### POST Request(Create Product in MongoDB and Create Index in Elastic)
+## Request (Create Product in MongoDB and Create Index in Elastic)
 ```bash
-
-# Postman
+##
+# Postman POST Request.
 http://localhost:3022/api/v1/products
+##
 # Request Body
 {
-    "name": "PC",      # Indexed
-    "price": 22,
+    "name": "Iphone 13",      # Indexed
+    "price": 999,
     "isComplet": true,
-    "llc": "LLC  46655"   # Indexed
+    "llc": "Apple LLC"        # Indexed
 }
-# Request N-2
-{
-    "name": "Camputer",    # Indexed 
-    "price": 11,
-    "isComplet": false,
-    "llc": "Turist LLC"   # Indexed
-}
-```
-#### Check Index
-```bash
-# Console
-curl -X GET http://192.168.171.141:9200/_aliases?pretty=true
-
+##
+# Postman POST Request.
+http://localhost:3022/api/v1/elastic/search?query=PC/name/
+##
+##
 ```
 
-
-#### GET Request(Search result)
-
+## Query description
 ```sh
-# Postman One Query
-  http://localhost:3022//api/v1/elastic/products?q=Camputer
-# Return resalt
-[
-    "Turist LLC",
-    "Camputer"
-]
-
-# Postman Split Query
-http://localhost:3022/api/v1/elastic/search?q=PC/name
-#Return result
-[
-    "PC"
-]
+########################################################################################################
+#         |    Search Data      |               Elastic indexes                    | Pagination
+#         |                     |                                                  |
+# ?query= |    JavaScript       |/  title   /   tags    /  authors  /  description |/ 12 
+#         |                     |                                                  |
+#         | Should be the first |            Search fields                         | Should be the last
+########################################################################################################
+# Search for target data.
+##
+$ http://localhost:3022/api/v1/elastic/search?query={ SEARCH_STRING }
+##
+$ http://localhost:3022/api/v1/elastic/search?query={ SEARCH_STRING_1 SEARCH_STRING_2 }/{  SEARCH_FIELDS_1, ...}/{ 24 }
+##
+# Example.
+$ http://localhost:3022/api/v1/elastic/search?query=JavaScript/title/tags/authors/12
+##
 ```

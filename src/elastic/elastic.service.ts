@@ -2,6 +2,7 @@ import { Injectable, HttpException, Logger } from '@nestjs/common';
 import * as elasticsearch from 'elasticsearch';
 import { ELASTIC } from '../other/constant';
 import { _PrefixQuery } from './query/';
+import { SearchResponse } from './interface/';
 
 @Injectable()
 export class ElasticService {
@@ -14,24 +15,15 @@ export class ElasticService {
     });
   }
 
-  /**
-   * Not used
-   */
-  public async connectionES() {
-    const checkIndex = await this.esClient.indices.exists({
-      index: ELASTIC.INDEX,
+  public async connectionES(idx) {
+    return await this.esClient.indices.exists({
+      index: idx,
     });
-    const isConnection = await this.esClient.cluster.health();
-
-    // this.logger.log(checkIndex, isConnection);
   }
 
-  public async searchIndex(
-    query: string,
-    field?: string,
-    cutWord?: string,
-    response = [],
-  ) {
+  public async searchIndex(query, field?, size?, cutWord?, response = {}) {
+    const isExists = await this.connectionES(ELASTIC.INDEX);
+    if (!isExists) throw new Error(`No Index, plese create`);
     if (!query.length) throw new Error('Query parametr is empty');
 
     query.length > ELASTIC.MIN_WORD
@@ -39,16 +31,17 @@ export class ElasticService {
       : (cutWord = query);
 
     const q = `${cutWord}*`,
-      body = _PrefixQuery(q, field);
+      body = _PrefixQuery(q, field, size);
 
     /**
      * @q -The required parameter in this form
      */
     await this.esClient
       .search({ index: ELASTIC.INDEX, body, q })
-      .then((res) => {
+      .then((res: SearchResponse) => {
+        console.log(res, res.hits, res.hits.hits);
         return res.hits.hits.map((hit) => {
-          response.push(Object.values(hit._source));
+          response = hit._source;
         });
       })
       .catch((err: Error) => {
@@ -57,6 +50,6 @@ export class ElasticService {
         throw new HttpException(err, 500);
       });
 
-    return response.flat();
+    return response;
   }
 }
