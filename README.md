@@ -63,7 +63,7 @@ http://localhost:3022/api/v1/products
 }
 ##
 # Postman POST Request.
-http://localhost:3022/api/v1/elastic/search?query=PC/name/33
+http://localhost:3022/api/v1/elastic/search?q=PC/name/33
 ##
 ##
 ```
@@ -79,11 +79,11 @@ http://localhost:3022/api/v1/elastic/search?query=PC/name/33
 ########################################################################################################
 # Search for target data.
 ##
-$ http://localhost:3022/api/v1/elastic/search?query={ SEARCH_STRING }
+$ http://localhost:3022/api/v1/elastic/search?q={ SEARCH_STRING }
 ##
-$ http://localhost:3022/api/v1/elastic/search?query={ SEARCH_STRING_1 SEARCH_STRING_2 }/{  SEARCH_FIELDS_1, ...}/{ 22 }
+$ http://localhost:3022/api/v1/elastic/search?q={ SEARCH_STRING_1 SEARCH_STRING_2 }/{  SEARCH_FIELDS_1, ...}/{ 22 }
 ##
 # Example.
-$ http://localhost:3022/api/v1/elastic/search?query=JavaScript/title/tags/authors/12
+$ http://localhost:3022/api/v1/elastic/search?q=JavaScript/title/tags/authors/12
 ##
 ```
