@@ -16,3 +16,8 @@ $curl -s -XPOST localhost:9200/products/name/_bulk?pretty -H "Content-Type: appl
 $curl -s -XPOST 192.168.171.141:9200/products/name/_bulk?pretty -H "Content-Type: application/x-ndjson" --data-binary @"E:\dev\ex-nest\migration\mongoCollectionData.json"
 
 ```
+### OR
+
+<p align="center">
+  <a href="#" target="blank"><img src="./assets/nia.png" width="200" alt="Nia" /></a>
+</p>
