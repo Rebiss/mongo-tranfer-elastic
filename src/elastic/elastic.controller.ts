@@ -7,7 +7,7 @@ export class ElasticController {
   constructor(private readonly elasticService: ElasticService) {}
 
   @Get('/search')
-  async searchData(@Query('q') q: string) {
+  public async searchData(@Query('q') q: string) {
     try {
       /**
        * @q Needed validate.

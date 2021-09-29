@@ -12,7 +12,8 @@
     "start": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "mtoes": "mongo-to-elastic --db products --c products"
   },
   "dependencies": {
     "@nestjs/common": "^7.5.1",
@@ -24,6 +25,7 @@
     "dotenv": "^10.0.0",
     "elasticbulk": "^1.0.7",
     "elasticsearch": "^16.7.2",
+    "mongo-to-elastic": "^0.0.2",
     "mongoosastic": "^4.6.0",
     "mongoose": "^5.13.5",
     "reflect-metadata": "^0.1.13",
