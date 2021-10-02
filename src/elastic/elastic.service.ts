@@ -21,7 +21,7 @@ export class ElasticService {
     });
   }
 
-  public async searchIndex(query, field?, size?, cutWord?, response = {}) {
+  public async searchIndex(query, field?, size?, cutWord?, response = []) {
     const isExists = await this.connectionES(ELASTIC.INDEX);
     if (!isExists) throw new Error(`No Index, plese create`);
     if (!query.length) throw new Error('Query parametr is empty');
@@ -39,14 +39,11 @@ export class ElasticService {
     await this.esClient
       .search({ index: ELASTIC.INDEX, body, q })
       .then((res: SearchResponse) => {
-        console.log(res, res.hits, res.hits.hits);
         return res.hits.hits.map((hit) => {
-          response = hit._source;
+          response.push(hit._source)
         });
       })
       .catch((err: Error) => {
-        this.logger.log(err);
-
         throw new HttpException(err, 500);
       });
 
